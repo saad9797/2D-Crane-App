@@ -1,0 +1,40 @@
+{
+  "name": "crane-gadget",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Parametric overhead (EOT) crane GA drawing generator",
+  "engines": {
+    "node": ">=20.12 <23",
+    "npm": ">=10"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "setup": "npm install && node scripts/setup.mjs",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:embedded": "node scripts/embedded-db.mjs",
+    "db:migrate": "npm run db:migrate -w @crane/api",
+    "db:seed": "npm run db:seed -w @crane/api",
+    "dev": "concurrently -k -n api,web -c blue,green \"npm run dev -w @crane/api\" \"npm run dev -w @crane/web\"",
+    "build": "npm run build -w @crane/api && npm run build -w @crane/web",
+    "start": "npm run start -w @crane/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e -w @crane/web"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "concurrently": "^9.1.0",
+    "embedded-postgres": "18.7.0-beta.19",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^15.14.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.40.0"
+  }
+}

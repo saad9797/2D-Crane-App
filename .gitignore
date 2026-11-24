@@ -1,0 +1,15 @@
+node_modules
+dist
+.env
+*.log
+.DS_Store
+coverage
+playwright-report
+test-results
+.embedded-pg
+apps/web/.vite
+reference/
+Take Home Assignment.pdf
+sample_crane.png
+crane_sketch_taken_from_internet.avif
+Crane_*_Research_Report.pdf

@@ -1,0 +1,23 @@
+# Local PostgreSQL for development. Credentials match apps/api/.env.example.
+#   npm run db:up      start it (waits until healthy)
+#   npm run db:down    stop it (data is kept in the crane-pgdata volume)
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: crane-db
+    environment:
+      POSTGRES_USER: crane
+      POSTGRES_PASSWORD: crane
+      POSTGRES_DB: crane
+    ports:
+      - '5433:5432'
+    volumes:
+      - crane-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U crane -d crane']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  crane-pgdata:

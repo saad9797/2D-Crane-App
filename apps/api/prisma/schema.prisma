@@ -1,0 +1,42 @@
+// Neon note: DATABASE_URL is the *pooled* connection string (host contains "-pooler") used at runtime;
+// DIRECT_URL is the *direct* string used only by `prisma migrate` (migrations need a session-level connection).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String?
+  createdAt    DateTime @default(now())
+  designs      Design[]
+}
+
+model Design {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  notes         String   @default("")
+  craneType     String
+  /// Denormalised from `inputs` (kept in sync by the API) so lists can sort and filter without JSON paths.
+  capacityT     Float
+  spanM         Float
+  /// Validated CraneInputs (packages/shared). Shape is versioned by `schemaVersion`.
+  inputs        Json
+  schemaVersion Int      @default(1)
+  /// Optimistic-concurrency token: incremented on every successful update.
+  revision      Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId, updatedAt])
+  @@index([userId, name])
+}
