@@ -1,6 +1,5 @@
 # AI_LOG.md
 
-Factual log of how AI was used in this project, written from the working session. `DECISIONS.md` was **not** produced with AI and is not part of this log.
 
 ## Tools used and what for
 
@@ -11,20 +10,39 @@ Factual log of how AI was used in this project, written from the working session
 | PyMuPDF | Rendering the exported PDF to an image to check text rotation, dashes and page size |
 | ESLint, `tsc --strict`, Vitest, Supertest, Testing Library | Checking the AI-written code |
 
-AI did **not** write `DECISIONS.md`. The `Crane_*_Research_Report.pdf` files in the project folder appeared during the session; they were treated as reference reading only and nothing in the app was built from them.
 
 ## Key prompts (summarised)
 
-1. *Master brief:* build the take-home to a "reviewer would think this person understands our users" standard on a fixed stack (Node + TypeScript API, Prisma on Neon, React + Vite + MUI, Render), with Zod schemas and the parametric engine shared by client and server, phases for user analysis, research, engine, API, UI and deployment, a hard rule not to write `DECISIONS.md`, and "never invent a standard, formula or citation; label estimates".
-2. *Research constraint:* read the brief, the sample drawing and the sketch first; research standards and manufacturer data on the web; record URLs and a confidence level for every formula; record where sources conflict.
-3. *Verification constraint:* render extreme designs and look at them; try to break validation and auth; run everything from a clean clone using only the documented commands.
+1. I used Claude code to generate comprehensive prompts:
+give prompt to achieve the above task to perfection without making any half measures, prompt ai to do his own research to produce a result that creates a best user experience and solves the problem that the user have and overall create a great user experience.
 
-(Replace these with your own wording if you prefer; they describe what was asked.)
+
+2. 
+i want to use the below stack
+(Nodejs backend
+Prisma ORM - will be deployed on neon
+) 
+React + Material UI - Frontend
+JWT auth - if required
+
+All will be deployed on render and db on neon.
+
+3. 
+ok this is running seperately ,
+
+i want to run 2 agents again seperately from this : will use 2 seperate from scratch sessions for these:
+
+1)
+only will research find and see how to integrate it here:
+one will research about a suitable open source model lightweight model that can extend user experience and add value here .... and it should be something that adds value not fitted in strictfully... can be something related to physics laws etc or can be something better i dont know i am just giving the idea.
+
+2)
+one will do research on the best work done on 2D diagrams ... whatever this is that we're creating here i dont know ..,  whatever work was done how was it done and how can we integrate it here.
+
+give 2 seperate prompts for the above 2 sessions and i will give you the result of both the sessions here and then you will give me the prompt to run in the session we are running right now of the last prompt you gave.
+
+I ran 4 consecutive agents 2 doing the research required 1 checking the research done and implementing only rationally made choice through the 4th final agent.
 
 ## Times the AI was wrong, and how it was caught
-
-1. **Search summaries disagreed with the standards.** The web-search tool's summaries mixed vendor blogs with standards (for example a class-by-class girder deflection table L/600…L/1200 attributed to CMAA 70, and a "wheelbase ≥ span/7" rule). I downloaded the primary documents that were free (IS 3177:1999 full text, CMAA's own buyers' guide and FAQ) and checked: only the CMAA 1/888 girder limit and the CMAA 74 §3.6.1 wheelbase ≥ span/8 survived; the rest became labelled Low/Estimate, with the conflict recorded in RESEARCH_NOTES.md. A page-fetch also "read" a Demag PDF that turned out to be an unrelated trailer-manufacturer document; the content was obviously off, so it was discarded and the Demag wheel catalogue was fetched separately.
-2. **The code-writing tool silently rewrote escape sequences.** Source files containing `​`-style escapes came back with the real invisible characters (one test file even got mojibake). Behaviour was still right, but the next `eslint` run failed on `no-irregular-whitespace`. Fixed by writing the escapes as text again.
-3. **A drawing bug only visible in a screenshot.** The first end view drew the runway beam over the hook, hiding it. Unit tests passed (geometry was inside the frame); looking at the rendered PNG showed it. The beam is now a thin flange strip.
-4. **A layout bug only visible in the browser.** The drawing canvas rendered 1257 px tall and pushed the sheet off screen. The component tests passed; measuring the DOM in Playwright showed `flex: 1` overriding the fixed height of the editor. Fixed and re-measured.
+1. **A layout bug only visible in the browser.** The drawing canvas rendered 1257 px tall and pushed the sheet off screen. The component tests passed; measuring the DOM in Playwright showed `flex: 1` overriding the fixed height of the editor. Fixed and re-measured.
 5. **A flaky test setup found by the clean-clone run.** The API tests started their database on a fixed port; a crashed earlier run left a server behind and the next run failed with "No test files found". Fixed by asking the OS for a free port and always stopping the server; two back-to-back runs now pass with no leftover process.
